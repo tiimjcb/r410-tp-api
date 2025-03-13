@@ -54,10 +54,71 @@
                     <button id="search-btn">Rechercher</button>
                 </div>
                 <div id="response-container">
+                    <h1 class="info">Entrez le pseudo d'un joueur</h1>
 
+                    <div id="response-error" class="hidden">
+                        <h1>Erreur</h1>
+                        <p>Le joueur n'a pas été trouvé.</p>
+                    </div>
+
+                    <div id="response-valid" class="hidden">
+                        <h1>Nom du compte</h1>
+                        <div class="horizontal">
+                            <div id="kills">
+                                <h3>Kills</h3>
+                                <p class="number">0</p>
+                            </div>
+                            <div id="kd">
+                                <h3>K/D</h3>
+                                <p class="number">0</p>
+                            </div>
+                            <div id="deaths">
+                                <h3>Morts</h3>
+                                <p class="number">0</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="horizontal">
+                            <div id="wins">
+                                <h3 style="color: orange;">Top 1</h3>
+                                <p class="number">0</p>
+                            </div>
+                            <div id="top-3">
+                                <h3 style="color: silver;">Top 3</h3>
+                                <p class="number">0</p>
+                            </div>
+                            <div id="top-5">
+                                <h3 style="color: saddlebrown;">Top 5</h3>
+                                <p class="number">0</p>
+                            </div>
+                            <div id="top-10">
+                                <h3>Top 10</h3>
+                                <p class="number">0</p>
+                            </div>
+                            <div id="winrate">
+                                <h3>Winrate</h3>
+                                <p class="number">0</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="horizontal">
+                            <div id="nb-matchs">
+                                <h3>Nombre de matchs</h3>
+                                <p class="number">0</p>
+                                <p class="number-subtitle">matchs</p>
+                            </div>
+                            <div id="minutes-played">
+                                <h3>Temps de jeu</h3>
+                                <p class="number">0</p>
+                                <p class="number-subtitle">minutes</p>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-            <div id="fav-container">
+
+            <div id="fav-container" class="hidden">
 
             </div>
         </main>

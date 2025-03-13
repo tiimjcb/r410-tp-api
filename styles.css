@@ -75,6 +75,12 @@ main h2{
     margin-bottom: 20px;
 }
 
+main h3{
+    font-family: 'Burbank-Bold', sans-serif;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
 a{
     color: #ff4655;
     text-decoration: none;
@@ -189,7 +195,7 @@ p.descripteur{
 
 #response-container {
     background: #222;
-    padding: 20px;
+    padding: 30px;
     margin: 20px 30px;
     border-radius: 10px;
     width: 60%;
@@ -197,7 +203,65 @@ p.descripteur{
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    height:370px;
+}
+
+#response-container h1{
+    font-family: 'Burbank-Bold', sans-serif;
+    font-size: 28px;
+    color: white;
+}
+
+#response-valid{
+    display: flex;
+    width:100%;
+    flex-direction: column;
+}
+
+#response-valid h1{
+    color: #e03e4f;
+    justify-self: start;
+    text-align: start;
+}
+
+#response-valid .horizontal{
+    display: flex;
+    width:100%;
+    gap: 10px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top:10px;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+    flex-shrink: 1;
+    flex-grow: 1;
+}
+
+#response-valid .horizontal div{
+    background: #333;
+    padding: 20px;
+    border-radius: 10px;
+    flex:1 1 30%;
+    min-width: 150px;
+}
+
+p.number{
+    font-size: 50px;
+    color: #BBBBBB;
+    vertical-align: center;
+    transform: translateY(5px);
+}
+
+p.number-subtitle {
+    font-size: 15px;
+    color: #BBBBBB;
+    margin-top: 10px;
+}
+
+hr{
+    margin : 20px 0 10px;
+    width: 100%;
+    border: 1px solid #333333;
 }
 
 
@@ -339,3 +403,6 @@ p.descripteur{
     width: 110px;
 }
 
+.hidden{
+    display: none !important;
+}
