@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>API Fortnite R4.A.10</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="./assets/js/index.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>API Fortnite R4.A.10</h1>
+            <nav>
+                <a id="stats-btn" href="./">Stats</a>
+                <a id="shop-btn" href="">Boutique</a>
+            </nav>
+        </header>
+        <main>
+            <h2>Stats d'un joueur</h2>
+            <div id="search-container">
+                <p>Entrez le pseudo d'un joueur afin de voir ses statistiques :</p>
+                <input type="text" id="player-name" placeholder="Entrez un pseudo..." />
+
+                <div id="platform-select">
+                    <input type="radio" id="platform-pc" name="platform" value="PC" checked>
+                    <label for="platform-pc">PC</label>
+
+                    <input type="radio" id="platform-playstation" name="platform" value="PlayStation">
+                    <label for="platform-playstation">PlayStation</label>
+
+                    <input type="radio" id="platform-xbox" name="platform" value="Xbox">
+                    <label for="platform-xbox">Xbox</label>
+
+                    <span class="selector"></span>
+                </div>
+
+                <div id="time-window-select">
+                    <label><input type="radio" name="time-window" value="Saison" checked> Saison</label>
+                    <label><input type="radio" name="time-window" value="Lifetime"> Lifetime</label>
+                </div>
+
+                <button id="search-btn">Rechercher</button>
+            </div>
+            <div id="response">
+
+            </div>
+        </main>
+    </body>
+</html>
