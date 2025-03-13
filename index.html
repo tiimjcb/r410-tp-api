@@ -15,10 +15,16 @@
         </header>
         <main>
             <h2>Stats d'un joueur</h2>
+            <p>Ce site à pour but d'utiliser <a href="https://dash.fortnite-api.com/endpoints/stats">l'API Fortnite</a> afin d'afficher les statistiques d'un joueur.</p>
             <div id="main-container">
                 <div id="search-container">
                     <label for="player-name">Entrez le pseudo d'un joueur afin de voir ses statistiques :</label>
-                    <input type="text" id="player-name" placeholder="Entrez un pseudo..." />
+                    <div id="search-bar">
+                        <input type="text" id="player-name" placeholder="Entrez un pseudo..." />
+                        <button id="fav-btn">
+                            <img id="fav-icon" src="assets/icons/star-outlined.png" alt="Favoris">
+                        </button>
+                    </div>
 
                     <p class="descripteur">Plateforme</p>
                     <div id="platform-select">
@@ -50,6 +56,9 @@
                 <div id="response-container">
 
                 </div>
+            </div>
+            <div id="fav-container">
+
             </div>
         </main>
     </body>

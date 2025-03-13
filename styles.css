@@ -62,11 +62,34 @@ nav a:hover{
 
 /* Main */
 
+main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding:0 10%;
+}
+
+main h2{
+    font-family: 'Burbank-Bold', sans-serif;
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+a{
+    color: #ff4655;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
 #main-container{
     display:flex;
+    width:100%;
     padding: 20px;
-    justify-content: center;
-    gap: 20px;
+    justify-content: space-around;
+    gap: 10px;
     align-items: flex-start;
 }
 
@@ -75,11 +98,45 @@ nav a:hover{
     padding: 20px;
     margin: 20px 30px;
     border-radius: 10px;
-    width: 400px;
+    width: 30%;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
+}
+
+#search-bar{
+    display:flex;
+    width:95%;
+    gap : 10px;
+}
+
+#search-bar #fav-btn{
+    padding: 5px 10px;
+    background: #333;
+    border: 1px solid #444;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#search-bar #fav-btn:hover{
+    background: #e03e4f;
+}
+
+#search-bar #fav-btn:disabled,
+#search-bar #fav-btn.disabled {
+    background: #555;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+#fav-icon{
+    width: 20px;
+    margin:0;
+    filter:invert();
 }
 
 #player-name {
@@ -114,6 +171,13 @@ button#search-btn {
     transition: 0.2s;
 }
 
+button#search-btn:disabled,
+button#search-btn.disabled {
+    background: #555;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
 button#search-btn:hover {
     background: #e03e4f;
 }
@@ -128,13 +192,28 @@ p.descripteur{
     padding: 20px;
     margin: 20px 30px;
     border-radius: 10px;
-    width: 600px;
+    width: 60%;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
     height:370px;
 }
+
+
+/* favoris container */
+
+#fav-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background: #222;
+    border-radius: 10px;
+    width: 92.5%;
+    margin-top: 10px;
+}
+
 
 /* Style custom pour les Radio Buttons */
 #platform-select {
@@ -260,10 +339,3 @@ p.descripteur{
     width: 110px;
 }
 
-
-button#search-btn:disabled,
-button#search-btn.disabled {
-    background: #555;
-    cursor: not-allowed;
-    opacity: 0.5;
-}
