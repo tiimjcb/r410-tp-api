@@ -38,26 +38,36 @@
                         <label for="platform-xbox">Xbox</label>
 
                         <span class="selector"></span>
+
                     </div>
 
                     <p class="descripteur">Période de temps</p>
                     <div id="time-window-select">
-                        <input type="radio" id="time-window-season" name="time-window" value="season" checked>
-                        <label for="time-window-season">Saison</label>
-
-                        <input type="radio" id="time-window-lifetime" name="time-window" value="lifetime">
+                        <input type="radio" id="time-window-lifetime" name="time-window" value="lifetime" checked>
                         <label for="time-window-lifetime">Lifetime</label>
+
+                        <input type="radio" id="time-window-season" name="time-window" value="season">
+                        <label for="time-window-season">Saison</label>
 
                         <span class="selector"></span>
                     </div>
 
                     <button id="search-btn">Rechercher</button>
+
+                    <div id="fav-container" class="hidden">
+                        <hr>
+                        <h3>Favoris</h3>
+                        <div id="fav-list">
+                            <button>fav1</button>
+                            <button>fav2</button>
+                        </div>
+                    </div>
                 </div>
                 <div id="response-container">
                     <h1 class="info">Entrez le pseudo d'un joueur</h1>
 
                     <div id="response-error" class="hidden">
-                        <h1>Erreur</h1>
+                        <h1 style="margin-bottom:10px;">Erreur</h1>
                         <p>Le joueur n'a pas été trouvé.</p>
                     </div>
 
@@ -115,13 +125,6 @@
                         </div>
 
                     </div>
-                </div>
-            </div>
-
-            <div id="fav-container" class="hidden">
-                <h2>Favoris</h2>
-                <div id="fav-list">
-
                 </div>
             </div>
         </main>
