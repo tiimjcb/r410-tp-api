@@ -77,7 +77,7 @@ main h2{
 
 main h3{
     font-family: 'Burbank-Bold', sans-serif;
-    font-size: 28px;
+    font-size: 24px;
     margin-bottom: 10px;
 }
 
@@ -378,27 +378,27 @@ hr{
 }
 
 /* positions spécifiques pour chaque plateforme */
-#platform-select input[value="PC"]:checked ~ .selector {
+#platform-select input[value="epic"]:checked ~ .selector {
     left: 4px;
     width: 75px;
 }
 
-#platform-select input[value="PlayStation"]:checked ~ .selector {
+#platform-select input[value="psn"]:checked ~ .selector {
     left: 78px;
     width: 75px;
 }
 
-#platform-select input[value="Xbox"]:checked ~ .selector {
+#platform-select input[value="xbl"]:checked ~ .selector {
     left: 153px;
     width: 75px;
 }
 
-#time-window-select input[value="Saison"]:checked ~ .selector {
+#time-window-select input[value="season"]:checked ~ .selector {
     left: 4px;
     width: 110px;
 }
 
-#time-window-select input[value="Lifetime"]:checked ~ .selector {
+#time-window-select input[value="lifetime"]:checked ~ .selector {
     left: 114px;
     width: 110px;
 }

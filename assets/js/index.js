@@ -1,56 +1,63 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+    /* récupération des éléments html */
     const playerInput = document.getElementById("player-name");
     const searchButton = document.getElementById("search-btn");
     const favButton = document.getElementById("fav-btn");
 
+    const platformRadios = document.getElementsByName("platform");
+    const timeWindowRadios = document.getElementsByName("time-window");
+
+    const responseContainer = document.getElementById("response-container");
+    const infoMessage = responseContainer.querySelector(".info");
+    const errorMessage = document.getElementById("response-error");
+    const validResponse = document.getElementById("response-valid");
+
+    /* constantes */
     const API_URL = "https://fortnite-api.com/v2/stats/br/v2";
-    const API_KEY = "6f3cdb97-1f92-4afb-b450-8870cc218abf"
+    const API_KEY = "6f3cdb97-1f92-4afb-b450-8870cc218abf";
 
-
+    /*
+    * Fonction pour activer/désactiver le bouton de recherche
+     */
     function toggleSearchButton() {
-        if (playerInput.value.trim() === "") {
-            searchButton.disabled = true;
-            searchButton.classList.add("disabled");
-
-            favButton.disabled = true;
-            favButton.classList.add("disabled");
-        } else {
-            searchButton.disabled = false;
-            searchButton.classList.remove("disabled");
-
-            favButton.disabled = false;
-            favButton.classList.remove("disabled");
-        }
+        const isEmpty = playerInput.value.trim() === "";
+        searchButton.disabled = isEmpty;
+        searchButton.classList.toggle("disabled", isEmpty);
+        favButton.disabled = isEmpty;
+        favButton.classList.toggle("disabled", isEmpty);
     }
 
-    async function getPlayerStats(playerName, plateforme, timeframe) {
-        const validPlatforms = ["pc", "psn", "xbox"];
+    /*
+    * Fonction pour récupérer les stats d'un joueur qui retourne une promesse sous forme d'un objet
+     */
+    function getPlayerStats(playerName, plateforme, timeframe) {
+        const validPlatforms = ["epic", "psn", "xbl"];
         const validTimeframes = ["season", "lifetime"];
 
-        if (!validPlatforms.includes(plateforme.toLowerCase())) {
-            console.error(`Plateforme invalide : "${plateforme}". Doit être "pc", "psn" ou "xbox".`);
-            return null;
+        plateforme = plateforme.toLowerCase();
+        timeframe = timeframe.toLowerCase();
+
+        if (!validPlatforms.includes(plateforme)) {
+            console.error(`Plateforme invalide : "${plateforme}". Doit être "epic", "psn" ou "xbox".`);
+            return Promise.reject("Paramètre plateforme invalide");
         }
 
-        if (!validTimeframes.includes(timeframe.toLowerCase())) {
+        if (!validTimeframes.includes(timeframe)) {
             console.error(`Timeframe invalide : "${timeframe}". Doit être "season" ou "lifetime".`);
-            return null;
+            return Promise.reject("Paramètre timeframe invalide");
         }
 
-        try {
-            const response = await fetch(`${API_URL}?name=${playerName}&accountType=${plateforme.toLowerCase()}&timeWindow=${timeframe.toLowerCase()}`, {
-                headers: {
-                    "Authorization": API_KEY
+        return fetch(`${API_URL}?name=${playerName}&accountType=${plateforme}&timeWindow=${timeframe}`, {
+            headers: { "Authorization": API_KEY }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur API: ${response.status}`);
                 }
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erreur API: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            const playerStats = {
+                return response.json();
+            })
+            .then(data => ({
                 name: data.data.account.name,
                 deaths: data.data.stats.all.overall.deaths,
                 kills: data.data.stats.all.overall.kills,
@@ -63,20 +70,57 @@ document.addEventListener("DOMContentLoaded", () => {
                 top5: data.data.stats.all.overall.top5,
                 top10: data.data.stats.all.overall.top10,
                 winRate: data.data.stats.all.overall.winRate
-            };
-
-            console.log("Statistiques filtrées du joueur :", playerStats);
-            return playerStats;
-
-        } catch (error) {
-            console.error("Erreur lors de la récupération des stats :", error);
-            return null;
-        }
+            }));
     }
 
-    toggleSearchButton();
+    /*
+    * Fonction pour mettre à jour l'interface utilisateur avec les statistiques du joueur
+     */
+    function updateUIWithStats(stats) {
+        document.getElementById("response-valid").classList.remove("hidden");
+
+        document.getElementById("response-valid").querySelector("h1").textContent = stats.name;
+        document.getElementById("kills").querySelector(".number").textContent = stats.kills;
+        document.getElementById("kd").querySelector(".number").textContent = stats.kd;
+        document.getElementById("deaths").querySelector(".number").textContent = stats.deaths;
+        document.getElementById("wins").querySelector(".number").textContent = stats.wins;
+        document.getElementById("top-3").querySelector(".number").textContent = stats.top3;
+        document.getElementById("top-5").querySelector(".number").textContent = stats.top5;
+        document.getElementById("top-10").querySelector(".number").textContent = stats.top10;
+        document.getElementById("winrate").querySelector(".number").textContent = stats.winRate;
+        document.getElementById("nb-matchs").querySelector(".number").textContent = stats.matches;
+        document.getElementById("minutes-played").querySelector(".number").textContent = stats.minutesPlayed;
+    }
+
+    /*
+    * Fonction pour gérer la recherche du joueur
+     */
+    function handleSearch() {
+        infoMessage.classList.add("hidden");
+        errorMessage.classList.add("hidden");
+        validResponse.classList.add("hidden");
+
+        const playerName = playerInput.value.trim();
+        const plateforme = [...platformRadios].find(radio => radio.checked).value;
+        const timeframe = [...timeWindowRadios].find(radio => radio.checked).value;
+
+        searchButton.disabled = true;
+        searchButton.textContent = "Chargement...";
+
+        getPlayerStats(playerName, plateforme, timeframe)
+            .then(stats => {
+                updateUIWithStats(stats);
+            })
+            .catch(() => {
+                errorMessage.classList.remove("hidden");
+            })
+            .finally(() => {
+                searchButton.disabled = false;
+                searchButton.textContent = "Rechercher";
+            });
+    }
+
+    searchButton.addEventListener("click", handleSearch);
     playerInput.addEventListener("input", toggleSearchButton);
-
-
+    toggleSearchButton();
 });
-
