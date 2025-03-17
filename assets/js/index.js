@@ -13,6 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const errorMessage = document.getElementById("response-error");
     const validResponse = document.getElementById("response-valid");
 
+    /*Objet littéral qui contiendra tout les favoris*/
+    let tabFavoritePlayer = {};
+
     /* constantes */
     const API_URL = "https://fortnite-api.com/v2/stats/br/v2";
     const API_KEY = "6f3cdb97-1f92-4afb-b450-8870cc218abf";
@@ -123,4 +126,40 @@ document.addEventListener("DOMContentLoaded", () => {
     searchButton.addEventListener("click", handleSearch);
     playerInput.addEventListener("input", toggleSearchButton);
     toggleSearchButton();
+
+    /**
+     * Fonction pour gérer les favoris dans le local storage
+     */
+    function updateLocalStorage() {
+        // On récupère le nom du joueur, plateforme et timeframe
+        const playerName = playerInput.value.trim();
+        const plateforme = [...platformRadios].find(radio => radio.checked).value;
+        const timeframe = [...timeWindowRadios].find(radio => radio.checked).value;
+
+        getPlayerStats(playerName, plateforme, timeframe)
+            .then(stats => {
+                console.log("Les stats après avoir cliqué sur favoris :", stats);
+
+                // Récupération des favoris existants dans localStorage
+                let tabFavoritePlayer = JSON.parse(localStorage.getItem("Favorites Players")) || [];
+
+                // Vérification si le joueur est déjà en favori (évite les doublons)
+                if (!tabFavoritePlayer.some(player => player.name === stats.name)) {
+                    tabFavoritePlayer.push(stats);
+                }
+
+                // Enregistrement des favoris mis à jour dans localStorage
+                localStorage.setItem("Favorites Players", JSON.stringify(tabFavoritePlayer));
+
+            })
+            .catch(() => {
+                errorMessage.classList.remove("hidden");
+            })
+            .finally(() => {
+                favButton.disabled = false;
+            });
+    }
+
+
+    favButton.addEventListener("click", updateLocalStorage);
 });
