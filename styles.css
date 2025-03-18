@@ -430,3 +430,31 @@ hr{
 .hidden{
     display: none !important;
 }
+
+.favorite-player {
+    background: #333;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    width: 200px;
+    min-height: 120px; /* S'assurer que toutes les cartes ont une hauteur minimale */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.favorite-player h3 {
+    font-size: 20px;
+    color: #ff4655;
+    font-weight: bold;
+    min-height: 40px; /* Fixer une hauteur pour uniformiser l'alignement */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.favorite-player p {
+    font-size: 16px;
+    color: white;
+    margin: 5px 0;
+}

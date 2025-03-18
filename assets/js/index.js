@@ -13,9 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const errorMessage = document.getElementById("response-error");
     const validResponse = document.getElementById("response-valid");
 
-    /*Objet littéral qui contiendra tout les favoris*/
-    let tabFavoritePlayer = {};
-
     /* constantes */
     const API_URL = "https://fortnite-api.com/v2/stats/br/v2";
     const API_KEY = "6f3cdb97-1f92-4afb-b450-8870cc218abf";
@@ -72,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 top3: data.data.stats.all.overall.top3,
                 top5: data.data.stats.all.overall.top5,
                 top10: data.data.stats.all.overall.top10,
-                winRate: data.data.stats.all.overall.winRate
+                winRate: data.data.stats.all.overall.winRate,
             }));
     }
 
@@ -92,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("top-10").querySelector(".number").textContent = stats.top10;
         document.getElementById("winrate").querySelector(".number").textContent = stats.winRate;
         document.getElementById("nb-matchs").querySelector(".number").textContent = stats.matches;
-        document.getElementById("minutes-played").querySelector(".number").textContent = stats.minutesPlayed;
+        document.getElementById("minutes-played").querySelector(".number").textContent = Math.round(stats.minutesPlayed / 60)
     }
 
     /*
@@ -107,12 +104,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const plateforme = [...platformRadios].find(radio => radio.checked).value;
         const timeframe = [...timeWindowRadios].find(radio => radio.checked).value;
 
+
+        console.log("Prenom du joueur " , playerName); //Correct
+
         searchButton.disabled = true;
         searchButton.textContent = "Chargement...";
 
         getPlayerStats(playerName, plateforme, timeframe)
             .then(stats => {
                 updateUIWithStats(stats);
+                console.log("Prenom dans la réponse API" , stats.name); //Pas correct
             })
             .catch(() => {
                 errorMessage.classList.remove("hidden");
@@ -138,18 +139,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
         getPlayerStats(playerName, plateforme, timeframe)
             .then(stats => {
-                console.log("Les stats après avoir cliqué sur favoris :", stats);
 
                 // Récupération des favoris existants dans localStorage
                 let tabFavoritePlayer = JSON.parse(localStorage.getItem("Favorites Players")) || [];
 
                 // Vérification si le joueur est déjà en favori (évite les doublons)
                 if (!tabFavoritePlayer.some(player => player.name === stats.name)) {
-                    tabFavoritePlayer.push(stats);
+                    //Je recupere mes stats + j'ajoute a ce tableau le playerName, plateforme , timeframe
+
+                    let updateStats = {
+                        ...stats,
+                        playerName: playerName,
+                        plateforme: plateforme,
+                        timeframe: timeframe,
+                    };
+
+                    tabFavoritePlayer.push(updateStats);
                 }
 
                 // Enregistrement des favoris mis à jour dans localStorage
+                //On enregistre les infos de l'utilisateur + (nom, plateforme,windowtime) pour refaire des requetes API quand on retrieve
                 localStorage.setItem("Favorites Players", JSON.stringify(tabFavoritePlayer));
+                console.log("Les stats après avoir cliqué sur favoris :", JSON.parse(localStorage.getItem("Favorites Players")));
+
+
 
             })
             .catch(() => {
@@ -159,7 +172,66 @@ document.addEventListener("DOMContentLoaded", () => {
                 favButton.disabled = false;
             });
     }
-
-
     favButton.addEventListener("click", updateLocalStorage);
+
+
+    /**
+     * Méthode qui récupere les élements du local storage, pour rendre l'affichage persistant
+     */
+    function retrieveFromLocalStorage() {
+        // Récupération des favoris dans le localStorage
+        let players = JSON.parse(localStorage.getItem("Favorites Players")) || [];
+
+
+        // Sélection du conteneur où afficher les favoris
+        const favContainer = document.getElementById("fav-container");
+        const favList = document.getElementById("fav-list");
+
+
+        // Nettoyage avant d'ajouter les nouveaux éléments (évite les doublons)
+        favList.innerHTML = "";
+
+        if (players.length === 0) {
+            favContainer.classList.add("hidden");
+            return;
+        } else {
+            favContainer.classList.remove("hidden");
+        }
+
+        // Création des éléments pour chaque joueur
+        players.forEach(player => {
+
+            //A partir des données du local storage, on refait une requete API pour s'assurer de la cohérence des données
+            console.log("Prenom du joueur " , player.name , "Plateforme : " , player.plateformee , "timeframe : " , player.timeframe);
+            getPlayerStats(player.name , player.plateforme, player.timeframe)
+                .then(stats => {
+                    // Création d'une div pour chaque favori
+                    const playerDiv = document.createElement("div");
+                    playerDiv.classList.add("favorite-player");
+
+                    // Ajout du contenu (nom, kills, victoires)
+                    playerDiv.innerHTML = `
+                        <button class="delete-favori" data-index="${index}">❌</button>
+                        <h3>${stats.name}</h3>
+                        <p><strong>Kills:</strong> ${stats.kills}</p>
+                        <p><strong>Victoires:</strong> ${stats.wins}</p>
+                    `;
+
+                    // Ajout au conteneur
+                    favList.appendChild(playerDiv);
+
+                })
+        });
+    }
+
+
+
+    //Au chargement de la page récuperer les élements du local storage
+    window.onload = () => {
+        retrieveFromLocalStorage();
+    }
+
+
+
+
 });
