@@ -137,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const plateforme = [...platformRadios].find(radio => radio.checked).value;
         const timeframe = [...timeWindowRadios].find(radio => radio.checked).value;
 
+
         getPlayerStats(playerName, plateforme, timeframe)
             .then(stats => {
 
@@ -179,16 +180,11 @@ document.addEventListener("DOMContentLoaded", () => {
      * Méthode qui récupere les élements du local storage, pour rendre l'affichage persistant
      */
     function retrieveFromLocalStorage() {
-        // Récupération des favoris dans le localStorage
         let players = JSON.parse(localStorage.getItem("Favorites Players")) || [];
 
-
-        // Sélection du conteneur où afficher les favoris
         const favContainer = document.getElementById("fav-container");
         const favList = document.getElementById("fav-list");
 
-
-        // Nettoyage avant d'ajouter les nouveaux éléments (évite les doublons)
         favList.innerHTML = "";
 
         if (players.length === 0) {
@@ -198,38 +194,60 @@ document.addEventListener("DOMContentLoaded", () => {
             favContainer.classList.remove("hidden");
         }
 
-        // Création des éléments pour chaque joueur
-        players.forEach(player => {
+        players.forEach((player, index) => {
+            console.log("Prenom du joueur:", player.name, "Plateforme:", player.plateforme, "Timeframe:", player.timeframe);
 
-            //A partir des données du local storage, on refait une requete API pour s'assurer de la cohérence des données
-            console.log("Prenom du joueur " , player.name , "Plateforme : " , player.plateformee , "timeframe : " , player.timeframe);
-            getPlayerStats(player.name , player.plateforme, player.timeframe)
-                .then(stats => {
-                    // Création d'une div pour chaque favori
-                    const playerDiv = document.createElement("div");
-                    playerDiv.classList.add("favorite-player");
+            // Création de la div joueur AVANT la requête API
+            const playerDiv = document.createElement("div");
+            playerDiv.classList.add("favorite-player");
+            playerDiv.setAttribute("data-index", index);
 
-                    // Ajout du contenu (nom, kills, victoires)
-                    playerDiv.innerHTML = `
-                        <button class="delete-favori" data-index="${index}">❌</button>
-                        <h3>${stats.name}</h3>
-                        <p><strong>Kills:</strong> ${stats.kills}</p>
-                        <p><strong>Victoires:</strong> ${stats.wins}</p>
-                    `;
+            // Ajout du contenu de base (sans stats)
+            playerDiv.innerHTML = `
+            <button class="delete-favori" data-index="${index}">❌</button>
+            <h3>${player.name}</h3>
+            <p><strong>Plateforme:</strong> ${player.plateforme}</p>
+            <p><strong>Victoires:</strong> Chargement...</p>
+        `;
 
-                    // Ajout au conteneur
-                    favList.appendChild(playerDiv);
+            favList.appendChild(playerDiv);
 
-                })
+            // 🔥 Requête API pour récupérer les vraies stats
+            getPlayerStats(player.name, player.plateforme, player.timeframe)
+                .then((stats) => {
+                    playerDiv.querySelector("p:last-of-type").innerHTML =
+                        `<strong>Victoires:</strong> ${stats.wins}`;
+                });
         });
     }
 
+    /**
+     * Écouteur qui récupere fav-list et ajoute un évenement au click ssi le bouton cliquer est un bouton delete
+     */
+    document.getElementById("fav-list").addEventListener("click", function(event) {
+        if (event.target.classList.contains("delete-favori")) {
+            let index = event.target.getAttribute("data-index");
+            deleteFromFavoris(index);
+        }
+    });
 
+    /**
+     * Fonction gestion de la suppression d'un favori
+     */
+    function deleteFromFavoris(index) {
+        let tabFavoritePlayer = JSON.parse(localStorage.getItem("Favorites Players")) || [];
 
-    //Au chargement de la page récuperer les élements du local storage
-    window.onload = () => {
+        tabFavoritePlayer.splice(index, 1);
+
+        // Mise à jour du localStorage
+        localStorage.setItem("Favorites Players", JSON.stringify(tabFavoritePlayer));
+
+        // Recharge l'affichage
         retrieveFromLocalStorage();
     }
+
+    // Exécute la récupération des favoris au chargement de la page
+    window.onload = retrieveFromLocalStorage;
 
 
 
